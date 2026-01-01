@@ -53,8 +53,7 @@ export const useWorkoutController = () => {
    */
   const startTimer = useCallback((
     seconds: number,
-    onComplete: () => void,
-    phase: Phase = 'working'
+    onComplete: () => void
   ) => {
     clearTimer();
     setState((prev) => ({ ...prev, remainingSeconds: seconds }));
@@ -123,8 +122,8 @@ export const useWorkoutController = () => {
             phase: 'working',
             remainingSeconds: exercise.workSeconds,
           });
-          startTimer(exercise.workSeconds, moveToNextSet, 'working');
-        }, 'restBetweenExercises');
+          startTimer(exercise.workSeconds, moveToNextSet);
+        });
       } else {
         // 全種目完了
         playCompleteSound();
@@ -162,8 +161,8 @@ export const useWorkoutController = () => {
           phase: 'working',
           remainingSeconds: exercise.workSeconds,
         });
-        startTimer(exercise.workSeconds, moveToNextSet, 'working');
-      }, 'restBetweenSets');
+        startTimer(exercise.workSeconds, moveToNextSet);
+      });
     }
   }, [startTimer]);
 
@@ -204,7 +203,7 @@ export const useWorkoutController = () => {
     setState(newState);
     playStartSound();
     notifyWorkoutStart(firstExercise.name, 1);
-    startTimer(firstExercise.workSeconds, moveToNextSet, 'working');
+    startTimer(firstExercise.workSeconds, moveToNextSet);
   }, [startTimer, moveToNextSet]);
 
   /**
@@ -237,7 +236,7 @@ export const useWorkoutController = () => {
         ...currentState,
         phase: nextPhase,
       });
-      startTimer(seconds, moveToNextSet, nextPhase);
+      startTimer(seconds, moveToNextSet);
     } else if (
       currentState.phase === 'working' || 
       currentState.phase === 'restBetweenSets' || 
