@@ -1,6 +1,19 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Phase, WorkoutState, WorkoutMenu } from '../types';
 import { REST_BETWEEN_EXERCISES_SECONDS } from '../workoutData';
+import {
+  playStartSound,
+  playEndSound,
+  playCountdownSound,
+  playCompleteSound,
+  initAudioContext,
+} from '../utils/sound';
+import {
+  notifyWorkoutStart,
+  notifyWorkoutEnd,
+  notifyRestEnd,
+  notifyExerciseComplete,
+} from '../utils/notifications';
 
 /**
  * ワークアウト制御用のカスタムHook
@@ -38,13 +51,23 @@ export const useWorkoutController = () => {
   /**
    * タイマーを開始
    */
-  const startTimer = useCallback((seconds: number, onComplete: () => void) => {
+  const startTimer = useCallback((
+    seconds: number,
+    onComplete: () => void,
+    phase: Phase = 'working'
+  ) => {
     clearTimer();
     setState((prev) => ({ ...prev, remainingSeconds: seconds }));
 
     intervalRef.current = setInterval(() => {
       setState((prev) => {
         const newSeconds = prev.remainingSeconds - 1;
+        
+        // カウントダウン音（残り10秒、5秒、3秒、2秒、1秒）
+        if (newSeconds === 10 || newSeconds === 5 || (newSeconds <= 3 && newSeconds > 0)) {
+          playCountdownSound();
+        }
+        
         if (newSeconds <= 0) {
           clearTimer();
           // タイマー完了後のコールバックを非同期で実行
@@ -81,21 +104,31 @@ export const useWorkoutController = () => {
           remainingSeconds: REST_BETWEEN_EXERCISES_SECONDS,
         });
 
+        // 種目間レスト開始
+        const nextExercise = currentState.selectedMenu.exercises[nextExerciseIndex];
+        notifyExerciseComplete(nextExercise.name);
+        playEndSound();
+
         startTimer(REST_BETWEEN_EXERCISES_SECONDS, () => {
           // 種目間レスト終了後、次の種目のセット開始
           const latestState = stateRef.current;
           if (!latestState.selectedMenu) return;
           
           const exercise = latestState.selectedMenu.exercises[latestState.currentExerciseIndex];
+          playStartSound();
+          notifyWorkoutStart(exercise.name, 1);
+          
           setState({
             ...latestState,
             phase: 'working',
             remainingSeconds: exercise.workSeconds,
           });
-          startTimer(exercise.workSeconds, moveToNextSet);
-        });
+          startTimer(exercise.workSeconds, moveToNextSet, 'working');
+        }, 'restBetweenExercises');
       } else {
         // 全種目完了
+        playCompleteSound();
+        notifyExerciseComplete();
         setState({
           ...currentState,
           phase: 'finished',
@@ -111,19 +144,26 @@ export const useWorkoutController = () => {
         remainingSeconds: currentExercise.restSeconds,
       });
 
+      // セット間レスト開始
+      playEndSound();
+      notifyWorkoutEnd();
+      
       startTimer(currentExercise.restSeconds, () => {
         // セット間レスト終了後、次のセット開始
         const latestState = stateRef.current;
         if (!latestState.selectedMenu) return;
         
         const exercise = latestState.selectedMenu.exercises[latestState.currentExerciseIndex];
+        playStartSound();
+        notifyRestEnd(exercise.name, nextSet);
+        
         setState({
           ...latestState,
           phase: 'working',
           remainingSeconds: exercise.workSeconds,
         });
-        startTimer(exercise.workSeconds, moveToNextSet);
-      });
+        startTimer(exercise.workSeconds, moveToNextSet, 'working');
+      }, 'restBetweenSets');
     }
   }, [startTimer]);
 
@@ -149,6 +189,9 @@ export const useWorkoutController = () => {
     const currentState = stateRef.current;
     if (!currentState.selectedMenu || currentState.phase !== 'ready') return;
 
+    // 音声コンテキストを初期化（ユーザー操作後なので可能）
+    initAudioContext();
+
     const firstExercise = currentState.selectedMenu.exercises[0];
     const newState: WorkoutState = {
       phase: 'working',
@@ -159,7 +202,9 @@ export const useWorkoutController = () => {
     };
     
     setState(newState);
-    startTimer(firstExercise.workSeconds, moveToNextSet);
+    playStartSound();
+    notifyWorkoutStart(firstExercise.name, 1);
+    startTimer(firstExercise.workSeconds, moveToNextSet, 'working');
   }, [startTimer, moveToNextSet]);
 
   /**
@@ -192,7 +237,7 @@ export const useWorkoutController = () => {
         ...currentState,
         phase: nextPhase,
       });
-      startTimer(seconds, moveToNextSet);
+      startTimer(seconds, moveToNextSet, nextPhase);
     } else if (
       currentState.phase === 'working' || 
       currentState.phase === 'restBetweenSets' || 

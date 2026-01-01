@@ -4,6 +4,7 @@ const urlsToCache = [
   '/',
   '/index.html',
   '/manifest.json',
+  '/sw.js',
 ];
 
 // インストール時の処理

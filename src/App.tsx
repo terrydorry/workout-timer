@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useWorkoutController } from './hooks/useWorkoutController';
 import {
   onMondayLowerBody,
@@ -8,6 +9,8 @@ import {
   offThursdayLowerBody,
   offSaturdayUpperBody,
 } from './workoutData';
+import { requestNotificationPermission } from './utils/notifications';
+import { initAudioContext } from './utils/sound';
 import './App.css';
 
 /**
@@ -37,6 +40,46 @@ const getPhaseLabel = (phase: string): string => {
 
 function App() {
   const { state, selectMenu, startWorkout, togglePause, skip, reset } = useWorkoutController();
+
+  // 通知と音声の初期化
+  useEffect(() => {
+    // 通知の許可をリクエスト
+    requestNotificationPermission();
+
+    // 音声コンテキストの初期化（ユーザー操作後に実行）
+    const handleUserInteraction = () => {
+      initAudioContext();
+      window.removeEventListener('click', handleUserInteraction);
+      window.removeEventListener('touchstart', handleUserInteraction);
+    };
+
+    window.addEventListener('click', handleUserInteraction);
+    window.addEventListener('touchstart', handleUserInteraction);
+
+    return () => {
+      window.removeEventListener('click', handleUserInteraction);
+      window.removeEventListener('touchstart', handleUserInteraction);
+    };
+  }, []);
+
+  // バックグラウンドでもタイマーが動作するように（Visibility API）
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        // バックグラウンドに移行したときの処理（必要に応じて）
+        console.log('アプリがバックグラウンドに移行しました');
+      } else {
+        // フォアグラウンドに戻ったときの処理
+        console.log('アプリがフォアグラウンドに戻りました');
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, []);
 
   // 確認画面（メニュー選択済み、スタート待ち）
   if (state.phase === 'ready' && state.selectedMenu) {
