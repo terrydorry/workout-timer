@@ -1,0 +1,471 @@
+/* リセットとベーススタイル */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+}
+
+.app {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.container {
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  max-width: 500px;
+  padding: 30px;
+  text-align: center;
+}
+
+/* ホーム画面 */
+.title {
+  font-size: 32px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.subtitle {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 30px;
+}
+
+.menu-section {
+  margin-bottom: 40px;
+}
+
+.menu-section:last-child {
+  margin-bottom: 0;
+}
+
+.menu-section-title {
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.menu-selection {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.menu-button {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 15px;
+  padding: 30px;
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.menu-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+}
+
+.menu-button:active {
+  transform: translateY(0);
+}
+
+.menu-button-title {
+  font-size: 22px;
+  margin-bottom: 6px;
+  line-height: 1.3;
+}
+
+.menu-button-subtitle {
+  font-size: 14px;
+  opacity: 0.9;
+  font-weight: normal;
+}
+
+/* ワークアウト画面 */
+.workout-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.phase-label {
+  font-size: 14px;
+  font-weight: bold;
+  color: #667eea;
+  background: #f0f4ff;
+  padding: 6px 12px;
+  border-radius: 20px;
+}
+
+.progress-info {
+  font-size: 14px;
+  color: #666;
+}
+
+.workout-main {
+  margin-bottom: 40px;
+}
+
+.exercise-name {
+  font-size: 28px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.set-info {
+  font-size: 18px;
+  color: #666;
+  margin-bottom: 30px;
+}
+
+.timer-display {
+  font-size: 72px;
+  font-weight: bold;
+  color: #667eea;
+  margin-bottom: 30px;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 2px;
+}
+
+.weight-info {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.weight-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 20px;
+  background: #f8f9fa;
+  border-radius: 10px;
+}
+
+.weight-label {
+  font-size: 14px;
+  color: #666;
+}
+
+.weight-value {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+}
+
+/* 操作ボタン */
+.workout-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.control-button {
+  padding: 16px 24px;
+  font-size: 18px;
+  font-weight: bold;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.pause-button {
+  background: #ffc107;
+  color: #333;
+}
+
+.pause-button:hover {
+  background: #ffb300;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 193, 7, 0.4);
+}
+
+.resume-button {
+  background: #28a745;
+  color: white;
+}
+
+.resume-button:hover {
+  background: #218838;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.4);
+}
+
+.skip-button {
+  background: #17a2b8;
+  color: white;
+}
+
+.skip-button:hover {
+  background: #138496;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(23, 162, 184, 0.4);
+}
+
+.reset-button {
+  background: #dc3545;
+  color: white;
+}
+
+.reset-button:hover {
+  background: #c82333;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(220, 53, 69, 0.4);
+}
+
+/* 確認画面 */
+.ready-screen {
+  padding: 20px 0;
+}
+
+.ready-title {
+  font-size: 28px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 30px;
+}
+
+.ready-menu-info {
+  margin-bottom: 40px;
+}
+
+.ready-menu-name {
+  font-size: 22px;
+  font-weight: bold;
+  color: #667eea;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.ready-stats {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 30px;
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 12px;
+}
+
+.ready-stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.ready-stat-label {
+  font-size: 14px;
+  color: #666;
+}
+
+.ready-stat-value {
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
+}
+
+.ready-exercises {
+  text-align: left;
+}
+
+.ready-exercises-title {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.ready-exercises-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.ready-exercise-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #f0f0f0;
+  gap: 12px;
+}
+
+.ready-exercise-item:last-child {
+  border-bottom: none;
+}
+
+.ready-exercise-number {
+  font-weight: bold;
+  color: #667eea;
+  min-width: 24px;
+}
+
+.ready-exercise-name {
+  flex: 1;
+  color: #333;
+}
+
+.ready-exercise-sets {
+  font-size: 14px;
+  color: #666;
+  background: #f0f0f0;
+  padding: 4px 12px;
+  border-radius: 12px;
+}
+
+.ready-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 30px;
+}
+
+.start-button {
+  background: #28a745;
+  color: white;
+  font-size: 20px;
+  padding: 18px 24px;
+}
+
+.start-button:hover {
+  background: #218838;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.4);
+}
+
+.cancel-button {
+  background: #6c757d;
+  color: white;
+}
+
+.cancel-button:hover {
+  background: #5a6268;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(108, 117, 125, 0.4);
+}
+
+/* 完了画面 */
+.finished-screen {
+  padding: 40px 20px;
+}
+
+.finished-title {
+  font-size: 36px;
+  font-weight: bold;
+  color: #28a745;
+  margin-bottom: 20px;
+}
+
+.finished-message {
+  font-size: 18px;
+  color: #666;
+  margin-bottom: 40px;
+  line-height: 1.6;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 480px) {
+  .container {
+    padding: 20px;
+    border-radius: 15px;
+  }
+
+  .title {
+    font-size: 28px;
+  }
+
+  .menu-section-title {
+    font-size: 18px;
+  }
+
+  .menu-button {
+    padding: 20px;
+  }
+
+  .menu-button-title {
+    font-size: 18px;
+  }
+
+  .menu-button-subtitle {
+    font-size: 12px;
+  }
+
+  .ready-title {
+    font-size: 24px;
+  }
+
+  .ready-menu-name {
+    font-size: 20px;
+  }
+
+  .ready-stats {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .ready-stat-item {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .ready-exercises-title {
+    font-size: 16px;
+  }
+
+  .ready-exercise-item {
+    font-size: 14px;
+  }
+
+  .ready-exercise-sets {
+    font-size: 12px;
+    padding: 2px 8px;
+  }
+
+  .timer-display {
+    font-size: 56px;
+  }
+
+  .exercise-name {
+    font-size: 24px;
+  }
+
+  .control-button {
+    padding: 14px 20px;
+    font-size: 16px;
+  }
+
+  .start-button {
+    font-size: 18px;
+    padding: 16px 20px;
+  }
+}
+
